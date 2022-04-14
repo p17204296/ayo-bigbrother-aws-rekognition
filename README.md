@@ -1,1 +1,0 @@
-# ayo-bigbrother-aws-rekognition
