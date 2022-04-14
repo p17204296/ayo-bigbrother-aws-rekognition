@@ -9,3 +9,9 @@ def get_image_from_url(img_url):
     img_bytes = resp.content
     #   return content
     return img_bytes
+
+
+# Get raw image data from a given filename
+def get_image_from_file_name(img_file):
+    with open(img_file, 'rb') as img_file:
+        return img_file.read()

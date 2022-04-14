@@ -14,4 +14,10 @@ img_bytes = helper_img.get_image_from_url(img_url)
 result = client.detect_labels(Image={'Bytes': img_bytes})
 
 #   Print result
-pprint(result)
+pprint("View image details below:")
+
+for label in result['Labels']:
+    print(f"Name: {label['Name']}; Confidence Score: {label['Confidence']}")
+
+
+
