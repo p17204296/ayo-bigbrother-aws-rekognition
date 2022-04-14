@@ -5,7 +5,7 @@ import helper_img
 client = boto3.client('rekognition')
 
 #   image file
-img_file = 'images/IMG_0116.JPG'
+img_file = 'images/IMG_3974.jpg'
 
 #   Reference helper_img file
 img_bytes = helper_img.get_image_from_file_name(img_file)
