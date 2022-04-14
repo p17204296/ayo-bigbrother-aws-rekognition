@@ -12,3 +12,23 @@ To create a video analytics plug-in that performs Face recognition using AWS onl
 - Throttle number of requests per ID (e.g. wait at least 1 second before trying again)
 
 Recognition should be done asynchronously in background process that updates the lookup table of tracking ID to face ID
+
+# Limitations of AWS Rekognition Image
+- Maximum image size stored as an Amazon S3 object is limited to 15 MB.
+- The minimum image size is 80 pixels for both height and width To be detected, a face must be no smaller that 40x40 pixels in an image with 1920X1080 pixels
+- Images with dimensions higher than 1920X1080 pixels will need a larger minimum face size proportionally
+- The Maximum images size as raw bytes passed in as parameter to an API is 5 MB.
+- Amazon Rekognition supports the PNG and JPEG image formats. That is, the images you provide as input to various API operations, such as DètectLabels and
+IndexFaces must be in one of the supported formats.
+- The Maximum number of faces you can store in a single face collection is 20 million
+- The maximum matching faces the search API returns is 4096
+
+# Limitations of AWS Rekognition Video
+- Amazon Rekognition Video can analyze stored videos up to 8GB in size
+- Amazon Rekognition Video can analyze stored videos up to 2 hours in length
+- Amazon Rekognition Video supports a maximum of 20 concurrent jobs per account
+
+# Limitations of AWS Rekognition Streaming Video
+ A Kinesis Video input stream can be associated with at most 1 Amazon Rekognition Video stream processor
+- A Kinesis Data output stream can be associated with at most 1 Amazon Rekognition Video stream processor
+- The Kinesis Video input stream and Kinesis Data output stream associated with an Amazon Rekognition Video stream processor cannot be shared by multiple processors
