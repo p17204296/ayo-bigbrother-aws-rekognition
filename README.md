@@ -29,6 +29,6 @@ IndexFaces must be in one of the supported formats.
 - Amazon Rekognition Video supports a maximum of 20 concurrent jobs per account
 
 # Limitations of AWS Rekognition Streaming Video
- A Kinesis Video input stream can be associated with at most 1 Amazon Rekognition Video stream processor
+- A Kinesis Video input stream can be associated with at most 1 Amazon Rekognition Video stream processor
 - A Kinesis Data output stream can be associated with at most 1 Amazon Rekognition Video stream processor
 - The Kinesis Video input stream and Kinesis Data output stream associated with an Amazon Rekognition Video stream processor cannot be shared by multiple processors
