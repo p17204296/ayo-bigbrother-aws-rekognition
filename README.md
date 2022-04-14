@@ -3,7 +3,7 @@ To create a video analytics plug-in that performs Face recognition using AWS onl
 
 (1)	Start by building stand along program that can take a cropped image of a face and identify from a group of people. The AWS face recognition service will need training with images of several people so that it can return a Face ID for the person it thinks it can see in the image. I’ve not looked at this at all but if you google “AWS Rekognition face recognition” to get started and see what is involved
 
-(2) Once the stand-along program is working you need to build a pipeline plug-in that does the following
+(2) Once the stand-along program is working you need to build a pipeline plug-in that does the following:
                - Look for face detection bounding boxes in the detection list and get the position and tracking ID
 - Keep a dictionary of tracker id values for faces
 - For faces with high confidence value do AWS face recognition using a cropped image around the detection
