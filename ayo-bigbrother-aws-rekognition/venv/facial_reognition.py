@@ -27,7 +27,8 @@ client = boto3.client('rekognition')
 source_img_file = 'images/IMG_8908.JPG'
 
 #   target image file
-target_img_file = 'images/IMG_0730.JPG'
+target_img_file = 'images/IMG_0730.JPG' # for a match
+# target_img_file = 'images/IMG_0731.JPG' # for no match
 
 #   Reference helper_img file
 source_img_bytes = helper_img.get_image_from_file_name(source_img_file)
@@ -41,7 +42,7 @@ compare_face_response = client.compare_faces(
 
 pprint(compare_face_response)
 
-if compare_face_response['FaceMatches'] != []:
+if compare_face_response['FaceMatches']:
     for face in compare_face_response['FaceMatches']:
         print(f"\n Similarity Score of source:{ source_img_file} and target:{target_img_file} is: {face['Similarity']}")
 else:
