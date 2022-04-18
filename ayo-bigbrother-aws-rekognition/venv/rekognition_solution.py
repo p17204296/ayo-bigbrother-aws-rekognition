@@ -5,7 +5,7 @@ if __name__ == "__main__":
     #   Name of S3 Bucket
     bucket = "shinaalukoayo.tech"
     #   Image filename
-    pic = "IMG_0731.JPG"
+    pic = "IMG_0731.jpg"
 
 #   define client service to use rekognition service
 client = boto3.client('rekognition')

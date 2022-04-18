@@ -24,11 +24,11 @@ client = boto3.client('rekognition')
 #   -------- Compare Faces  ------------
 
 #   source image file
-source_img_file = 'images/IMG_8908.JPG'
+source_img_file = 'images/IMG_8908.jpg'
 
 #   target image file
-target_img_file = 'images/IMG_0730.JPG' # for a match
-# target_img_file = 'images/IMG_0731.JPG' # for no match
+target_img_file = 'images/IMG_0730.jpg' # for a match
+# target_img_file = 'images/IMG_0731.jpg' # for no match
 
 #   Reference helper_img file
 source_img_bytes = helper_img.get_image_from_file_name(source_img_file)
