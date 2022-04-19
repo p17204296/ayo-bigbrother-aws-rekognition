@@ -62,8 +62,14 @@ def create_collection(collection_id):
 
 
 # ----- Index faces - add faces to a collection ----
-
+""""
 def add_faces_to_collection(bucket, pic, collection_id):
+
+    # Store all image files
+    # all_pics = bucket.objects.all()
+    # for pic_object in all_pics.objects.all():
+    #     print(pic_object.key)
+
     index_faces_response = client.index_faces(CollectionId=collection_id,
                                               Image={'S3Object': {'Bucket': bucket, 'Name': pic}},
                                               ExternalImageId=pic,
@@ -92,6 +98,10 @@ indexed_faces_count = add_faces_to_collection(bucket, pic, collection_id)
 print("Faces indexed count: " + str(indexed_faces_count))
 
 """
+
+"""
+COMMENT:
+
 Results for IMG_0116.jpg
 Faces indexed:
   Face ID: 7fc006e4-570f-4a4e-a2e6-4ecf1c39ee24
@@ -104,3 +114,36 @@ Faces not indexed:
 Faces indexed count: 3
 
 """
+
+
+# ----- Index faces - List faces in a collection ----
+
+def list_faces_in_collection(collection_id):
+    maxResults = 10
+    faces_count = 0
+    tokens = True
+
+    list_faces_response = client.list_faces(CollectionId=collection_id,
+                                            MaxResults=maxResults)
+
+    print('Faces in collection ' + collection_id)
+
+    while tokens:
+
+        faces = list_faces_response['Faces']
+
+        for face in faces:
+            print(face)
+            faces_count += 1
+        if 'NextToken' in list_faces_response:
+            nextToken = list_faces_response['NextToken']
+            list_faces_response = client.list_faces(CollectionId=collection_id,
+                                                    NextToken=nextToken, MaxResults=maxResults)
+        else:
+            tokens = False
+    return faces_count
+
+
+faces_count = list_faces_in_collection(collection_id)
+print("\n faces count: " + str(faces_count))
+
