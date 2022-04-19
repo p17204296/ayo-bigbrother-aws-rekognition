@@ -147,3 +147,21 @@ def list_faces_in_collection(collection_id):
 faces_count = list_faces_in_collection(collection_id)
 print("\n faces count: " + str(faces_count))
 
+
+# ----- Index faces - Search faces in a collection by images ----
+
+input_img='IMG_0730.jpg'
+threshold = 70
+maxFaces=10
+
+search_faces_response=client.search_faces_by_image(CollectionId=collection_id,
+                            Image={'S3Object':{'Bucket':bucket,'Name':input_img}},
+                            FaceMatchThreshold=threshold,
+                            MaxFaces=maxFaces)
+                            
+faceMatches=search_faces_response['FaceMatches']
+print ('Matching faces')
+for match in faceMatches:
+        print ('FaceId:' + match['Face']['FaceId'])
+        print ('Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
+        print
