@@ -2,8 +2,11 @@ import boto3
 from pprint import pprint
 from botocore.exceptions import ClientError
 from os import environ
+import json
 
 if __name__ == "__main__":
+    #   AWS Region
+    region = "us-east-1"
     #   Name of S3 Bucket
     bucket = "big-brother-face-id"
     #   Image filename
@@ -12,15 +15,13 @@ if __name__ == "__main__":
     collection_id = 'big-brother-collection'
     # Collection ARN: aws:rekognition:us-east-1:171330417321:collection/big-brother-collection - for reference
 
-#   define client service to use rekognition service
-client = boto3.client('rekognition')
+    #   define client service to use rekognition service
+    client = boto3.client('rekognition', region_name=region)
 
 
 # ------  Create Collection ID  ------
 
 def create_collection(collection_id):
-    client = boto3.client('rekognition')
-
     # Create a collection
     print('Creating collection:' + collection_id)
     create_collection_response = client.create_collection(CollectionId=collection_id)
@@ -147,21 +148,57 @@ def list_faces_in_collection(collection_id):
 faces_count = list_faces_in_collection(collection_id)
 print("\n faces count: " + str(faces_count))
 
-
 # ----- Index faces - Search faces in a collection by images ----
 
-input_img='IMG_0730.jpg'
+input_img = 'IMG_0730.jpg'
 threshold = 70
-maxFaces=10
+maxFaces = 10
 
-search_faces_response=client.search_faces_by_image(CollectionId=collection_id,
-                            Image={'S3Object':{'Bucket':bucket,'Name':input_img}},
-                            FaceMatchThreshold=threshold,
-                            MaxFaces=maxFaces)
-                            
-faceMatches=search_faces_response['FaceMatches']
-print ('Matching faces')
+search_faces_response = client.search_faces_by_image(CollectionId=collection_id,
+                                                     Image={'S3Object': {'Bucket': bucket, 'Name': input_img}},
+                                                     FaceMatchThreshold=threshold,
+                                                     MaxFaces=maxFaces)
+
+faceMatches = search_faces_response['FaceMatches']
+print('Matching faces')
 for match in faceMatches:
-        print ('FaceId:' + match['Face']['FaceId'])
-        print ('Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
-        print
+    print('FaceId:' + match['Face']['FaceId'])
+    print('Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
+    print
+
+
+#   DetectFaces operation to determine if an image captured by the camera is suitable for processing by the SearchFacesByImage operation
+
+# local input image
+photo = 'images/IMG_3974.jpg'
+
+def detect_faces(target_file):
+    imageTarget = open(target_file, 'rb')
+
+    response = client.detect_faces(Image={'Bytes': imageTarget.read()},
+                                   Attributes=['ALL'])
+
+    print('Detected faces for ' + photo)
+    for faceDetail in response['FaceDetails']:
+        print('The detected face is between ' + str(faceDetail['AgeRange']['Low'])
+              + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
+
+        print('Here are the other attributes:')
+        print(json.dumps(faceDetail, indent=4, sort_keys=True))
+
+        # Access predictions for individual face details and print them
+        print("Gender: " + str(faceDetail['Gender']))
+        print("Smile: " + str(faceDetail['Smile']))
+        print("Eyeglasses: " + str(faceDetail['Eyeglasses']))
+        print("Emotions: " + str(faceDetail['Emotions'][0]))
+
+    return len(response['FaceDetails'])
+
+detect_faces_count = detect_faces(photo)
+print("Faces detected: " + str(detect_faces_count))
+
+#   Checks to see if only one face has been detected in the image
+if detect_faces_count == 1:
+    print("Image suitable for use in collection.")
+else:
+    print("Please submit an image with only one face.")
