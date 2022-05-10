@@ -255,7 +255,7 @@ print('Searching collection for', photo)
 
 # gu.create_pillow_img(img_fname).show()
 # try to find the face in the collection
-faces_info = AWSFaceRecognition.search_faces_by_image(photo,)
+faces_info = AWSFaceRecognition.search_faces_by_image(photo)
 
 
 """
