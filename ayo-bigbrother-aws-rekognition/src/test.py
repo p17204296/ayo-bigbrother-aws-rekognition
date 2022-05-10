@@ -56,8 +56,26 @@ class AWSFaceRecognition:
 
         #   Print results
         print("Detected labels for " + pic)
+        print()   
+        for label in response['Labels']:
+            print ("Label: " + label['Name'])
+            print ("Confidence: " + str(label['Confidence']))
+            print ("Instances:")
+            for instance in label['Instances']:
+                print ("  Bounding box")
+                print ("    Top: " + str(instance['BoundingBox']['Top']))
+                print ("    Left: " + str(instance['BoundingBox']['Left']))
+                print ("    Width: " +  str(instance['BoundingBox']['Width']))
+                print ("    Height: " +  str(instance['BoundingBox']['Height']))
+                print ("  Confidence: " + str(instance['Confidence']))
+                print()
 
-        pprint(response)
+            print ("Parents:")
+            for parent in label['Parents']:
+                print ("   " + parent['Name'])
+            print ("----------")
+            print ()
+        return len(response['Labels'])
 
     # ----- Index faces - add faces to a collection ----
 
