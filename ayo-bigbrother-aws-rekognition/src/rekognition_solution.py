@@ -241,7 +241,7 @@ photo = 'IMG_0256.jpg'
 #  ------ EXAMPLE OF USING THE GRAPHICAL_UTILS ------
 # # show the reference faces
 print('Showing reference faces')
-for face_info in AWSFaceRecognition.list_faces_in_collection(collection_id):
+for face_info in AWSFaceRecognition.list_faces_in_collection(1):
     # pprint(face)
     img_fname = str(face_info['ExternalImageId'])
     img = gu.create_pillow_img(gu.get_image(img_fname))
