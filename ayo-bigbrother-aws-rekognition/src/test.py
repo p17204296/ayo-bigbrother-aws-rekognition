@@ -77,6 +77,40 @@ class AWSFaceRecognition:
             print ()
         return len(response['Labels'])
 
+    #   DetectFaces operation to determine if an image captured by the camera is suitable for processing by the SearchFacesByImage operation
+
+    def detect_faces(target_file):
+
+        imageTarget = open(target_file, 'rb')
+        detection_count = 0
+
+        response = client.detect_faces(Image={'Bytes': imageTarget.read()},
+                                       Attributes=['ALL'])
+
+        print('Detected faces for ' + photo)
+        for faceDetail in response['FaceDetails']:
+
+            detection_count = detection_count + 1
+            print(f'\nFace Number: {detection_count}')
+
+            print('The detected face is between ' + str(faceDetail['AgeRange']['Low'])
+                  + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
+
+            print('Here are the other attributes:')
+            print(json.dumps(faceDetail, indent=4, sort_keys=True))
+
+            # Access predictions for individual face details and print them
+            faceBoundingBox= faceDetail['BoundingBox']
+            print("BoundingBox: " + str(faceBoundingBox))
+
+            faceLandmarks = faceDetail['Landmarks']
+            print("Landmarks: " + str(faceLandmarks))
+            
+            print("Gender: " + str(faceDetail['Gender']))
+            print("Emotions: " + str(faceDetail['Emotions'][0]))
+
+        return len(response['FaceDetails'])
+
     # ----- Index faces - add faces to a collection ----
 
     def add_faces_to_collection(bucket, pic, collection_id):
@@ -132,35 +166,10 @@ class AWSFaceRecognition:
             if 'NextToken' in list_faces_response:
                 nextToken = list_faces_response['NextToken']
                 list_faces_response = client.list_faces(CollectionId=collection_id,
-                                                        NextToken=nextToken, MaxResults=maxResults)
+                                                        NextToken=nextToken, MaxResults=max_results)
             else:
                 tokens = False
         return faces_count
-
-    #   DetectFaces operation to determine if an image captured by the camera is suitable for processing by the SearchFacesByImage operation
-
-    def detect_faces(target_file):
-
-        imageTarget = open(target_file, 'rb')
-
-        response = client.detect_faces(Image={'Bytes': imageTarget.read()},
-                                       Attributes=['ALL'])
-
-        print('Detected faces for ' + photo)
-        for faceDetail in response['FaceDetails']:
-            print('The detected face is between ' + str(faceDetail['AgeRange']['Low'])
-                  + ' and ' + str(faceDetail['AgeRange']['High']) + ' years old')
-
-            print('Here are the other attributes:')
-            print(json.dumps(faceDetail, indent=4, sort_keys=True))
-
-            # Access predictions for individual face details and print them
-            print("Gender: " + str(faceDetail['Gender']))
-            print("Smile: " + str(faceDetail['Smile']))
-            print("Eyeglasses: " + str(faceDetail['Eyeglasses']))
-            print("Emotions: " + str(faceDetail['Emotions'][0]))
-
-        return len(response['FaceDetails'])
 
     # ----- Index faces - Search faces in a collection by images ----
 
