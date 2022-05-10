@@ -110,7 +110,7 @@ class AWSFaceRecognition:
 
     # ----- Index faces - add faces to a collection ----
 
-    def add_faces_to_collection(bucket, pic, collection_id):
+    def add_faces_to_collection(pic):
 
         # Store all image files
         # all_pics = bucket.objects.all()
@@ -142,7 +142,7 @@ class AWSFaceRecognition:
 
     # ----- Index faces - List faces in a collection ----
 
-    def list_faces_in_collection(collection_id, max_results):
+    def list_faces_in_collection(max_results):
 
         # max_results = 10
         faces_count = 0
@@ -170,7 +170,7 @@ class AWSFaceRecognition:
 
     # ----- Index faces - Search faces in a collection by images ----
 
-    def search_faces(input_img, threshold, max_faces):
+    def search_faces_by_image(input_img, threshold, max_faces):
 
         search_faces_response = client.search_faces_by_image(CollectionId=collection_id,
                                                              Image={'S3Object': {'Bucket': bucket, 'Name': input_img}},
@@ -185,7 +185,28 @@ class AWSFaceRecognition:
             print
 
         return faceMatches
-        
+
+    # ----- Index faces - Search faces in a collection by faceid ----
+    def search_faces_by_face_id(face_id):
+        threshold = 10
+        max_faces=2
+    
+        search_faces_response=client.search_faces(CollectionId=collection_id,
+                                    FaceId=face_id,
+                                    FaceMatchThreshold=threshold,
+                                    MaxFaces=max_faces)
+
+                            
+        face_matches=search_faces_response['FaceMatches']
+        if face_matches:
+            print ('Matching faces')
+            for match in face_matches:
+                    print ('FaceId:' + match['Face']['FaceId'])
+                    print ('Similarity: ' + "{:.2f}".format(match['Similarity']) + "%")
+                    print
+            return len(face_matches)
+        else:
+            print(f"No Matches Found in {collection_id}")
 
     #  ------ Compare Faces ------
 
@@ -214,10 +235,31 @@ class AWSFaceRecognition:
 
 
 # local input image
-photo = 'images/IMG_0256.jpg'
+photo = 'IMG_0256.jpg'
+"""
+Faces indexed:
+  Face ID: 788054f8-e083-4ccb-b839-9ff024ca5fe7
+  Location: {'Width': 0.08978036046028137, 'Height': 0.08837335556745529, 'Left': 0.6578381657600403, 'Top': 0.2394707351922989}
+  Face ID: 804d4ad3-722e-4bb6-ae8d-ca42b3847442
+  Location: {'Width': 0.08510416746139526, 'Height': 0.0901789739727974, 'Left': 0.2858472764492035, 'Top': 0.25558149814605713}
+  Face ID: 1ec59e2a-3aba-42e7-9c5b-30f8bcccd75a
+  Location: {'Width': 0.07962249964475632, 'Height': 0.0812126025557518, 'Left': 0.4861559271812439, 'Top': 0.20975834131240845}
+  Face ID: 08b86e48-ca8f-428f-9db7-25c506652b86
+  Location: {'Width': 0.077255479991436, 'Height': 0.07500091940164566, 'Left': 0.4510369598865509, 'Top': 0.3792579770088196}
+Faces not indexed:
+"""
+# detect_faces_count = AWSFaceRecognition.detect_faces(photo)
+# print("Faces detected: " + str(detect_faces_count))
 
-detect_faces_count = AWSFaceRecognition.detect_faces(photo)
-print("Faces detected: " + str(detect_faces_count))
+list_faces_in_collection = AWSFaceRecognition.list_faces_in_collection(10)
+"""
+Faces in collection big-brother-collection
+{'FaceId': '189bd6b4-8d85-400c-8e45-84de969141b2', 'BoundingBox': {'Width': 0.10718099772930145, 'Height': 0.21733799576759338, 'Left': 0.6824349761009216, 'Top': 0.06727279722690582}, 'ImageId': 'bf34bf70-4aa2-30e1-9732-d3cd78dfd94b', 'ExternalImageId': 'IMG_0116.jpg', 'Confidence': 99.98519897460938, 'IndexFacesModelVersion': '6.0'}
+{'FaceId': '3d396f62-3180-4164-abb2-a25ca26ff85b', 'BoundingBox': {'Width': 0.10439900308847427, 'Height': 0.1935119926929474, 'Left': 0.4539799988269806, 'Top': 0.1475220024585724}, 'ImageId': 'bf34bf70-4aa2-30e1-9732-d3cd78dfd94b', 'ExternalImageId': 'IMG_0116.jpg', 'Confidence': 99.99099731445312, 'IndexFacesModelVersion': '6.0'}
+{'FaceId': '7fc006e4-570f-4a4e-a2e6-4ecf1c39ee24', 'BoundingBox': {'Width': 0.11247800290584564, 'Height': 0.2099040001630783, 'Left': 0.19918599724769592, 'Top': 0.11340200155973434}, 'ImageId': 'bf34bf70-4aa2-30e1-9732-d3cd78dfd94b', 'ExternalImageId': 'IMG_0116.jpg', 'Confidence': 99.9822998046875, 'IndexFacesModelVersion': '6.0'}
+"""
+
+search_faces_by_face_id = AWSFaceRecognition.search_faces_by_face_id('3d396f62-3180-4164-abb2-a25ca26ff85b')
 
 """
 #   Checks to see if only one face has been detected in the image

@@ -113,7 +113,7 @@ class AWSFaceRecognition:
 
     # ----- Index faces - add faces to a collection ----
 
-    def add_faces_to_collection(bucket, pic, collection_id):
+    def add_faces_to_collection(pic):
 
         # Store all image files
         # all_pics = bucket.objects.all()
