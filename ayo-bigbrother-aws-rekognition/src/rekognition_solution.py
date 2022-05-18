@@ -239,23 +239,23 @@ class AWSFaceRecognition:
 photo = 'IMG_0256.jpg'
 
 #  ------ EXAMPLE OF USING THE GRAPHICAL_UTILS ------
-# # show the reference faces
-print('Showing reference faces')
-for face_info in AWSFaceRecognition.list_faces_in_collection(1):
-    # pprint(face)
-    img_fname = str(face_info['ExternalImageId'])
-    img = gu.create_pillow_img(gu.get_image(img_fname))
-    gu.draw_box(img, face_info['BoundingBox']).show()
-
-# now we can search faces
-# create a variable to store the filename of the image
-# img_fname = str(Path(FACE_SEARCH_DIR) / 'IMG_0256.jpg')
-
-print('Searching collection for', photo)
-
-# gu.create_pillow_img(img_fname).show()
-# try to find the face in the collection
-faces_info = AWSFaceRecognition.search_faces_by_image(photo)
+# # # show the reference faces
+# print('Showing reference faces')
+# for face_info in AWSFaceRecognition.list_faces_in_collection(collection_id):
+#     # pprint(face)
+#     img_fname = str(face_info['ExternalImageId'])
+#     img = gu.create_pillow_img(gu.get_image(img_fname))
+#     gu.draw_box(img, face_info['BoundingBox']).show()
+#
+# # now we can search faces
+# # create a variable to store the filename of the image
+# # img_fname = str(Path(FACE_SEARCH_DIR) / 'IMG_0256.jpg')
+#
+# print('Searching collection for', photo)
+#
+# # gu.create_pillow_img(img_fname).show()
+# # try to find the face in the collection
+# faces_info = AWSFaceRecognition.search_faces_by_image(photo,)
 
 
 """
